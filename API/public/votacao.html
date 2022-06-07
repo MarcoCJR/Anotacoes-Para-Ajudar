@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Star Wars || Escolha! </title>
+    <link rel="icon" href="CSS/icone.png">
+    <link rel="stylesheet" href="CSS/estilovotacao.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+
+        <div class="container">
+
+            <a href="index.html"><img src="https://logodownload.org/wp-content/uploads/2015/12/star-wars-logo-3-1.png"
+                    class="logo_header"></a>
+
+            <ul class="navbar">
+                <li><a href="index.html"> Inicio</a></li>
+                <li><a href="cadastro.html"> Cadastre-se </a></li>
+                <li><a href="grafico.html">Gráfico</a></li>
+                <li><a href="creditos.html">Créditos</a></li>
+                </li>
+            </ul>
+
+            <div class="botaoLogin">
+                <a href="login.html">Entrar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="cardImagens">
+        <div class="imperioEsquerda">
+            <h1>Junte-se ao Império!</h1>
+            <img class="imperioImagem"
+                src="https://toppng.com/uploads/preview/star-wars-imperial-logo-galactic-empire-11563654660dg1du5g85h.png"
+                onclick="imperio()" id="imperioImagem">
+            <br>
+            <b>O Império precisa de você. A escória <br>
+                rebelde vem se alastrando por todo <br>
+                o universo, e precisamos dos mais <br>
+                leais soldados que estiverem dispostos <br>
+                a aniquilar a ameaça causada pela insolência. <br>
+                Junte-se hoje ao Império Galáctico, e seja o <br>
+                punho do Imperador.</b>
+        </div>
+
+        <div class="rebeldesDireita">
+            <h1>Junte-se à Rebelião!</h1>
+            <img class="rebeldesImagem" src="https://i.pinimg.com/474x/6a/d1/9b/6ad19b8ccd205f0645b89f960d5ae782.jpg"
+                onclick="rebeldes()" id="rebeldesImagem">
+            <br>
+            <b>A Rebelião busca sua ajuda! <br>
+                O Império está lentamente envenenando <br>
+                nossos planetas com discórdia e uma <br>
+                falsa sensação de paz, enquanto nosso <br>
+                povo é escravizado por eles, e nossos <br>
+                filhos são submetidos ao trabalho forçado. <br>
+                Livre-se das amarras do Império, e ajude <br>
+                a libertar toda a galáxia!</b>
+        </div>
+    </div>
+
+    <div class="aviso">
+        <b>ATENÇÃO: Suas informações usadas no cadastro serão utilizadas para armazenar <br> seu voto em nosso Banco de
+            Dados, mas nunca serão reveladas a terceiros.</b>
+    </div> <br>
+    <br>
+    <button onclick="cadastrarV()"> <b>Aliste-se!</b> </button>
+</body>
+
+</html>
+
+<script>
+
+
+// Criar vetor
+    var voto = []
+    var audio = ''
+
+    const imperioImagem = document.getElementById('imperioImagem')
+    const rebeldesImagem = document.getElementById('rebeldesImagem')
+
+
+    // Uma function pra cada carro, pra poder armazenar os votos. Usar o splice ao invés de Push. 1000 no meu caso é o id que setei pras imagens, mas você pode setar qualquer valor no BD, desde que mude aqui também.
+    function imperio() {
+        voto.splice(0, 1, "1000")
+        rebeldesImagem.classList.remove('show2')
+        imperioImagem.classList.add('show')
+        audio = new Audio("./CSS/Audios/Vader.mp3");
+        audio.play();
+    }
+
+// Uma function pra cada carro, pra poder armazenar os votos. Usar o splice ao invés de Push. 1000 no meu caso é o id que setei pras imagens, mas você pode setar qualquer valor no BD, desde que mude aqui também.
+    function rebeldes() {
+        voto.splice(0, 1, "1001")
+        rebeldesImagem.classList.add('show2')
+        imperioImagem.classList.remove('show')
+        audio = new Audio("./CSS/Audios/Luke.mp3");
+        audio.play();
+    }
+
+    // Function que vai encaminhar o voto pro Banco de Dados. Pode só copiar a function do cadastro e ir mudando o nome.
+    function cadastrarV() {
+
+        // Criar variável com o valor do vetor. "0" é a posição dele, que no caso é o primeiro valor
+        var votoVar = voto[0];
+
+        // Só mudar o nome do cadastrarv, como eu falei
+        fetch("/usuarios/cadastrarv", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // Agora é padrão, como se fosse criar um novo caminho
+                // Agora vá para o arquivo routes/usuario.js
+                votoServer: votoVar,
+                idUsuarioServer: sessionStorage.ID_USUARIO
+            })
+        }).then(function () {
+            window.location.href = "grafico.html"    // Essa linha aqui é pra caso você queira referenciar pra alguma página depois de executar a função
+        })
+            .catch(function (errinho) {
+                console.error(errinho)
+            })
+
+        console.log()
+    }
+
+</script>
